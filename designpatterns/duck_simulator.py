@@ -14,8 +14,6 @@ class DuckSimulator:
         for _ in range(n_times):
             duck.fly()
 
-
-
 class Goose:
     
     def honk(self):
@@ -27,8 +25,14 @@ class Goose:
     def quack(self):
         self.honk()
 
-        
+# Adapter
+class DuckDisguise(Duck):
+
+    def __init__(self, goose : Goose):
+        self.goose = goose
+
+
 if __name__ == '__main__':
     goose = Goose()
     simulator = DuckSimulator()
-    simulator.simulate(goose)
+    simulator.simulate(DuckDisguise(goose))
