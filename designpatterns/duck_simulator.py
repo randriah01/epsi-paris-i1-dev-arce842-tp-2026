@@ -3,6 +3,9 @@ from strategy_duck import Duck
 class DuckSimulator:
     
     def simulate(self, duck : Duck):
+        if not isinstance(duck, Duck):
+            print('Error, this is not a duck')
+            return
         self.__fly_n_times(duck, 2)
         duck.quack() #ERROR: fix this in 2 lines
         self.__fly_n_times(duck, 3)
@@ -11,6 +14,8 @@ class DuckSimulator:
         for _ in range(n_times):
             duck.fly()
 
+
+
 class Goose:
     
     def honk(self):
@@ -18,6 +23,9 @@ class Goose:
         
     def fly(self):
         print('Fly like a goose')
+        
+    def quack(self):
+        self.honk()
 
         
 if __name__ == '__main__':
