@@ -66,21 +66,29 @@ def add_quack_counter_feature(duck : Duck) -> None:
     else:
         duck.counter = 0
       
-def add_quack_counter_feature_v2(cls, steps=1):
-    class ChildCls(cls):
-        def __init__(self):
-            super().__init__()
-            self.__counter = 0
-            
-        def quack(self):
-            super().quack()
-            self.__counter += 1
-            
-        @property
-        def counter(self):
-            return self.__counter
-            
-    return ChildCls
+def add_quack_counter_feature_v2(cls=None, *, steps=1):
+    def wrap_quack_counter(cls):
+        class ChildCls(cls):
+            def __init__(self):
+                super().__init__()
+                self.__counter = 0
+                
+            def quack(self):
+                super().quack()
+                self.__counter += steps
+                
+            @property
+            def counter(self):
+                return self.__counter
+ 
+        return ChildCls
+    
+    if cls is None:
+        return wrap_quack_counter
+    else:
+        return wrap_quack_counter(cls)
+
+
 
 def add_fly_counter(duck : Duck) -> Duck:
     return duck
