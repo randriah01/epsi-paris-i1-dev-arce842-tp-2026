@@ -82,6 +82,29 @@ class StudentIteratorMatter3(Iterator):
         return student
 
 
+class StudentIteratorMatter4(Iterator):
+
+    def __init__(self, students: list):
+        self.__students = sorted(students, key=lambda s: s.matter_4, reverse=True)
+        self.__index = 0
+
+    def __next__(self):
+        if self.__index >= len(self.__students):
+            raise StopIteration
+        student = self.__students[self.__index]
+        self.__index += 1
+        return student
+
+
+def add_matter_4_iterator(cls):
+    """Décorateur de classe qui ajoute iter_matter_4 à SchoolClass."""
+    def iter_matter_4(self):
+        return StudentIteratorMatter4(self._SchoolClass__students)
+    cls.iter_matter_4 = iter_matter_4
+    return cls
+
+
+@add_matter_4_iterator
 class SchoolClass(Iterable):
 
     def __init__(self):
@@ -125,4 +148,8 @@ if __name__ == '__main__':
 
     print('\n=== Classement Matière 3 (itérateur) ===')
     for student in school_class.iter_matter_3():
+        print(student)
+
+    print('\n=== Classement Matière 4 (itérateur via décorateur) ===')
+    for student in school_class.iter_matter_4():
         print(student)
