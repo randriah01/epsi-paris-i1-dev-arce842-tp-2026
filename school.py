@@ -18,12 +18,6 @@ class Student:
                 f'| M3: {self.matter_3} | avg: {self.average:.2f}')
 
 
-# Réponse à la question étape 5 :
-# Si on ajoute une nouvelle matière, il faudrait créer une nouvelle méthode
-# rank_matter_4 dans SchoolClass, ce qui transgresse le principe Open/Closed (OCP)
-# car on modifie une classe existante au lieu de l'étendre.
-
-
 class StudentIteratorMatter1(Iterator):
 
     def __init__(self, students: list):
@@ -36,6 +30,40 @@ class StudentIteratorMatter1(Iterator):
         student = self.__students[self.__index]
         self.__index += 1
         return student
+
+
+class StudentIteratorMatter2(Iterator):
+
+    def __init__(self, students: list):
+        self.__students = sorted(students, key=lambda s: s.matter_2, reverse=True)
+        self.__index = 0
+
+    def __next__(self):
+        if self.__index >= len(self.__students):
+            raise StopIteration
+        student = self.__students[self.__index]
+        self.__index += 1
+        return student
+
+
+class StudentIteratorMatter3(Iterator):
+
+    def __init__(self, students: list):
+        self.__students = sorted(students, key=lambda s: s.matter_3, reverse=True)
+        self.__index = 0
+
+    def __next__(self):
+        if self.__index >= len(self.__students):
+            raise StopIteration
+        student = self.__students[self.__index]
+        self.__index += 1
+        return student
+
+
+# Réponse à la question étape 7 :
+# Problème : chaque nouvelle matière oblige à créer un nouvel itérateur ET
+# à modifier SchoolClass pour ajouter une nouvelle méthode iter_matter_X.
+# On transgresse à nouveau l'OCP dans deux classes simultanément.
 
 
 class SchoolClass(Iterable):
@@ -58,6 +86,12 @@ class SchoolClass(Iterable):
     def __iter__(self):
         return StudentIteratorMatter1(self.__students)
 
+    def iter_matter_2(self):
+        return StudentIteratorMatter2(self.__students)
+
+    def iter_matter_3(self):
+        return StudentIteratorMatter3(self.__students)
+
 
 if __name__ == '__main__':
     school_class = SchoolClass()
@@ -65,18 +99,14 @@ if __name__ == '__main__':
     school_class.add_student(Student('A', 8, 2, 17))
     school_class.add_student(Student('V', 9, 14, 14))
 
-    print('=== Classement Matière 1 (méthode) ===')
-    for student in school_class.rank_matter_1():
-        print(student)
-
-    print('\n=== Classement Matière 2 (méthode) ===')
-    for student in school_class.rank_matter_2():
-        print(student)
-
-    print('\n=== Classement Matière 3 (méthode) ===')
-    for student in school_class.rank_matter_3():
-        print(student)
-
-    print('\n=== Classement Matière 1 (itérateur __iter__) ===')
+    print('=== Classement Matière 1 (itérateur __iter__) ===')
     for student in school_class:
+        print(student)
+
+    print('\n=== Classement Matière 2 (itérateur) ===')
+    for student in school_class.iter_matter_2():
+        print(student)
+
+    print('\n=== Classement Matière 3 (itérateur) ===')
+    for student in school_class.iter_matter_3():
         print(student)
