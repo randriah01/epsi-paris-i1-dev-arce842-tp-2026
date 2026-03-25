@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 
 # milk cost: 0.5
 # sugar cost: 0.4

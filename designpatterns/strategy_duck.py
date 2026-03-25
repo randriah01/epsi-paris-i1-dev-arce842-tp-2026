@@ -34,7 +34,11 @@ class FlyBackward(FlyBehavior):
     def fly(self):
         print('Backward flying')
 
+def add_publisher_feature(cls):
+    #TODO: review quack
+    return cls
 
+@add_publisher_feature
 class Duck(ABC):
     
     def __init__(self, fly_behavior:FlyBehavior, quack_behavior:QuackBehavior):
@@ -62,7 +66,7 @@ def add_quack_counter_feature(duck : Duck) -> None:
     else:
         duck.counter = 0
       
-def add_quack_counter_feature_v2(cls):
+def add_quack_counter_feature_v2(cls, steps=1):
     class ChildCls(cls):
         def __init__(self):
             super().__init__()
@@ -81,7 +85,7 @@ def add_quack_counter_feature_v2(cls):
 def add_fly_counter(duck : Duck) -> Duck:
     return duck
 
-@add_quack_counter_feature_v2
+@add_quack_counter_feature_v2(steps=2)
 class GreenDuck(Duck):
     
     def __init__(self):

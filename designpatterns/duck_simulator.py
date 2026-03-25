@@ -1,6 +1,6 @@
 from strategy_duck import Duck, FlyBehavior, QuackBehavior
 from strategy_duck import GreenDuck, MallardDuck, OtherDuck
-from strategy_duck import add_quack_counter_feature, add_quack_counter_feature_v2, add_fly_counter
+from abc import ABC, abstractmethod
 
 class DuckSimulator:
     
@@ -104,7 +104,19 @@ class QuackCounterV2(Duck):
     def counter(self):
         return self._Duck__quack_behavior.counter
 
+class Observer(ABC):
+    
+    @abstractmethod
+    def notify(self, subject):
+        ...
 
+class Quackologist(Observer):
+    
+    def __init__(self):
+        self.__total_quacks = 0
+    
+    def notify(self, subject):
+        print('#TODO')
 
 if __name__ == '__main__':
     goose = Goose()
