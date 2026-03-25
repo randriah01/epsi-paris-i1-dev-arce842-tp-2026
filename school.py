@@ -1,4 +1,5 @@
 from collections.abc import Iterable, Iterator
+from abc import ABCMeta
 
 
 def add_matter_4(grade: float):
@@ -104,8 +105,21 @@ def add_matter_4_iterator(cls):
     return cls
 
 
+# Singleton via métaclasse
+# On hérite de ABCMeta car Iterable utilise déjà ABCMeta comme métaclasse.
+# SingletonMeta doit en être une sous-classe pour éviter un conflit.
+class SingletonMeta(ABCMeta):
+
+    __instance = None
+
+    def __call__(cls, *args, **kwargs):
+        if cls.__instance is None:
+            cls.__instance = super().__call__(*args, **kwargs)
+        return cls.__instance
+
+
 @add_matter_4_iterator
-class SchoolClass(Iterable):
+class SchoolClass(Iterable, metaclass=SingletonMeta):
 
     def __init__(self):
         self.__students = []
@@ -153,3 +167,7 @@ if __name__ == '__main__':
     print('\n=== Classement Matière 4 (itérateur via décorateur) ===')
     for student in school_class.iter_matter_4():
         print(student)
+
+    print('\n=== Test Singleton ===')
+    school_class_2 = SchoolClass()
+    print(f'Même instance ? {school_class is school_class_2}')
