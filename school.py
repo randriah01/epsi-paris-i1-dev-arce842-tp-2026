@@ -1,6 +1,28 @@
 from collections.abc import Iterable, Iterator
 
 
+def add_matter_4(grade: float):
+    """Décorateur de classe qui ajoute la matière 4 à tous les étudiants."""
+    def decorator(cls):
+        original_init = cls.__init__
+
+        def new_init(self, name, matter_1, matter_2, matter_3):
+            original_init(self, name, matter_1, matter_2, matter_3)
+            self.matter_4 = grade
+
+        cls.__init__ = new_init
+
+        original_str = cls.__str__
+
+        def new_str(self):
+            return original_str(self) + f' | M4: {self.matter_4}'
+
+        cls.__str__ = new_str
+        return cls
+    return decorator
+
+
+@add_matter_4(grade=15.0)
 class Student:
 
     def __init__(self, name: str, matter_1: float, matter_2: float, matter_3: float):
@@ -60,12 +82,6 @@ class StudentIteratorMatter3(Iterator):
         return student
 
 
-# Réponse à la question étape 7 :
-# Problème : chaque nouvelle matière oblige à créer un nouvel itérateur ET
-# à modifier SchoolClass pour ajouter une nouvelle méthode iter_matter_X.
-# On transgresse à nouveau l'OCP dans deux classes simultanément.
-
-
 class SchoolClass(Iterable):
 
     def __init__(self):
@@ -99,7 +115,7 @@ if __name__ == '__main__':
     school_class.add_student(Student('A', 8, 2, 17))
     school_class.add_student(Student('V', 9, 14, 14))
 
-    print('=== Classement Matière 1 (itérateur __iter__) ===')
+    print('=== Classement Matière 1 (itérateur) ===')
     for student in school_class:
         print(student)
 
